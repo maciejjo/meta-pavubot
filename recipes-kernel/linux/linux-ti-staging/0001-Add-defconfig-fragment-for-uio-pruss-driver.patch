@@ -1,0 +1,25 @@
+From 4612fcc22d62d2b1a819e1e05cfa7ed0d5be6745 Mon Sep 17 00:00:00 2001
+From: Maciej Sobkowski <maciejjo@maciejjo.pl>
+Date: Sat, 28 May 2016 12:55:56 +0200
+Subject: [PATCH 1/2] Add defconfig fragment for uio-pruss driver
+
+---
+ ti_config_fragments/pruss_uio.cfg | 6 ++++++
+ 1 file changed, 6 insertions(+)
+ create mode 100644 ti_config_fragments/pruss_uio.cfg
+
+diff --git a/ti_config_fragments/pruss_uio.cfg b/ti_config_fragments/pruss_uio.cfg
+new file mode 100644
+index 0000000..92de9c8
+--- /dev/null
++++ b/ti_config_fragments/pruss_uio.cfg
+@@ -0,0 +1,6 @@
++##################################################
++# TI PRUSS UIO driver
++##################################################
++# UIO Module
++CONFIG_UIO=m
++CONFIG_UIO_PRUSS=m
+-- 
+2.8.3
+

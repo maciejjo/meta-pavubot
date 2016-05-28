@@ -1,0 +1,141 @@
+From 0410a2c344c12057e863cd7798769bbc2ec89d22 Mon Sep 17 00:00:00 2001
+From: Maciej Sobkowski <maciejjo@maciejjo.pl>
+Date: Thu, 26 May 2016 23:12:12 +0200
+Subject: [PATCH] orangutan: DT changes
+
+---
+ arch/arm/boot/dts/am335x-boneblack.dts | 77 ++++++++++++++++++++++++++++++++++
+ arch/arm/boot/dts/am33xx.dtsi          |  8 ++--
+ 2 files changed, 81 insertions(+), 4 deletions(-)
+
+diff --git a/arch/arm/boot/dts/am335x-boneblack.dts b/arch/arm/boot/dts/am335x-boneblack.dts
+index 3d993ae..463bfa0 100644
+--- a/arch/arm/boot/dts/am335x-boneblack.dts
++++ b/arch/arm/boot/dts/am335x-boneblack.dts
+@@ -34,6 +34,83 @@
+ 	status = "okay";
+ };
+ 
++&am33xx_pinmux {
++
++	/* Pins configuration for various appliances */
++	servo_pwm_P9_16: pinmux_pwm_P9_16_pins {
++		pinctrl-single,pins = <0x04c  0x6>; /* P9_16 (ZCZ ball T14) | MODE 6 */
++	};
++
++	dc_motor_driver_pins: pinmux_dc_motor_driver {
++		pinctrl-single,pins = <
++			0x020  0x04
++			0x024  0x04
++			0x090  0x2F
++			0x09c  0x2F
++			0x034  0x2F
++			0x03c  0x2F
++			0x02c  0x2F
++		>;
++	};
++
++	/*
++	pwm_P8_13: pinmux_pwm_P8_13_pins {
++		pinctrl-single,pins = <0x024  0x4>;
++	};
++	*/
++
++};
++
++/ {
++	ocp {
++		servo: servo {
++			compatible= "pwm_servo";
++
++			pwms = <&ehrpwm1 1 20000000 1>;
++			pwm-names = "angle";
++
++			pinctrl-names = "default";
++			pinctrl-0 = <&servo_pwm_P9_16>;
++
++			enabled = <0>;
++			duty = <0>;
++			status = "okay";
++		};
++
++		dc_motor_driver: tb6612fng {
++			compatible = "toshiba,tb6612fng";
++
++			pinctrl-names = "default";
++			pinctrl-0 = <&dc_motor_driver_pins>;
++
++			pwms =
++				<&ehrpwm2 1 10000000 1>,
++				<&ehrpwm2 0 10000000 1>;
++
++			pwm-names = "motor_a", "motor_b";
++
++			ain1-gpio = <&gpio2 5 0>;
++			ain2-gpio = <&gpio2 2 0>;
++			bin1-gpio = <&gpio1 15 0>;
++			bin2-gpio = <&gpio0 27 0>;
++			stby-gpio = <&gpio1 13 0>;
++			/*
++			compatible	= "pwm_test";
++			pwms		= <&ehrpwm2 1 10000000 1>;
++			pwm-names	= "PWM_P8_13";
++
++			pinctrl-names = "default";
++			pinctrl-0 = <&dc_motor_driver_pins>;
++
++			enabled		= <0>;
++			duty		= <0>;
++			status		= "okay";
++			*/
++		};
++
++	};
++};
++
+ &cpu0_opp_table {
+ 	/*
+ 	 * All PG 2.0 silicon may not support 1GHz but some of the early
+diff --git a/arch/arm/boot/dts/am33xx.dtsi b/arch/arm/boot/dts/am33xx.dtsi
+index 32e7bbb..97d97cc 100644
+--- a/arch/arm/boot/dts/am33xx.dtsi
++++ b/arch/arm/boot/dts/am33xx.dtsi
+@@ -792,7 +792,7 @@
+ 			ti,hwmods = "epwmss1";
+ 			#address-cells = <1>;
+ 			#size-cells = <1>;
+-			status = "disabled";
++			status = "okay";
+ 			ranges = <0x48302100 0x48302100 0x80   /* ECAP */
+ 				  0x48302180 0x48302180 0x80   /* EQEP */
+ 				  0x48302200 0x48302200 0x80>; /* EHRPWM */
+@@ -812,7 +812,7 @@
+ 				reg = <0x48302200 0x80>;
+ 				clocks = <&ehrpwm1_tbclk>;
+ 				clock-names = "tbclk";
+-				status = "disabled";
++				status = "okay";
+ 			};
+ 		};
+ 
+@@ -822,7 +822,7 @@
+ 			ti,hwmods = "epwmss2";
+ 			#address-cells = <1>;
+ 			#size-cells = <1>;
+-			status = "disabled";
++			status = "okay";
+ 			ranges = <0x48304100 0x48304100 0x80   /* ECAP */
+ 				  0x48304180 0x48304180 0x80   /* EQEP */
+ 				  0x48304200 0x48304200 0x80>; /* EHRPWM */
+@@ -842,7 +842,7 @@
+ 				reg = <0x48304200 0x80>;
+ 				clocks = <&ehrpwm2_tbclk>;
+ 				clock-names = "tbclk";
+-				status = "disabled";
++				status = "okay";
+ 			};
+ 		};
+ 
+-- 
+2.8.3
+
