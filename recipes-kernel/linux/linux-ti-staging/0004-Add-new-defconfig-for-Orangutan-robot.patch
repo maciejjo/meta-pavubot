@@ -1,18 +1,18 @@
-From eac79683147e7784e7056fec5b01e13d6db82eff Mon Sep 17 00:00:00 2001
+From df9a795d726bf848c6d1f34d617eafb46780277c Mon Sep 17 00:00:00 2001
 From: Maciej Sobkowski <maciejjo@maciejjo.pl>
 Date: Sat, 28 May 2016 12:56:26 +0200
-Subject: [PATCH 2/2] Add new defconfig for Orangutan robot
+Subject: [PATCH 4/4] Add new defconfig for Orangutan robot
 
 ---
- ti_config_fragments/orangutan_defconfig_fragment | 8 ++++++++
+ ti_config_fragments/pavubot_config.fragment | 8 ++++++++
  1 file changed, 8 insertions(+)
- create mode 100644 ti_config_fragments/orangutan_defconfig_fragment
+ create mode 100644 ti_config_fragments/pavubot_config.fragment
 
-diff --git a/ti_config_fragments/orangutan_defconfig_fragment b/ti_config_fragments/orangutan_defconfig_fragment
+diff --git a/ti_config_fragments/pavubot_config.fragment b/ti_config_fragments/pavubot_config.fragment
 new file mode 100644
-index 0000000..354bc9a
+index 0000000..f68569b
 --- /dev/null
-+++ b/ti_config_fragments/orangutan_defconfig_fragment
++++ b/ti_config_fragments/pavubot_config.fragment
 @@ -0,0 +1,8 @@
 +use-kernel-config=multi_v7_defconfig
 +config-fragment=ti_config_fragments/multi_v7_prune.cfg
@@ -21,7 +21,7 @@ index 0000000..354bc9a
 +config-fragment=ti_config_fragments/audio_display.cfg
 +config-fragment=ti_config_fragments/connectivity.cfg
 +config-fragment=ti_config_fragments/pruss_uio.cfg
-+
++config-fragment=ti_config_fragments/pavubot-drivers.cfg
 -- 
 2.8.3
 

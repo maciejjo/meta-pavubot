@@ -1,7 +1,7 @@
-From 0410a2c344c12057e863cd7798769bbc2ec89d22 Mon Sep 17 00:00:00 2001
+From b29df81ffea1f3da28f323ace1ba984901cdb241 Mon Sep 17 00:00:00 2001
 From: Maciej Sobkowski <maciejjo@maciejjo.pl>
 Date: Thu, 26 May 2016 23:12:12 +0200
-Subject: [PATCH] orangutan: DT changes
+Subject: [PATCH 1/4] pavubot: DT changes
 
 ---
  arch/arm/boot/dts/am335x-boneblack.dts | 77 ++++++++++++++++++++++++++++++++++
