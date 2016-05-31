@@ -1,4 +1,4 @@
-SUMMARY="Image containing SW needed for Orangutan mobile robot"
+SUMMARY="Image containing SW needed for Pavubot mobile robot"
 
 require recipes-core/images/core-image-minimal.bb
 
