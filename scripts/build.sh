@@ -4,6 +4,11 @@ MYPATH="$(readlink -f $(dirname "${BASH_SOURCE[0]}"))"
 
 . ${MYPATH}/config.sh
 
+if [ ! -e ${TARGET_DIR} ] ; then
+	echo "Directory \"${TARGET_DIR}\" dir not found! Please run setup.sh script first."
+	exit 1
+fi
+
 docker run \
 	--net=host --rm -it \
 	-v $(pwd):$(pwd)    \
