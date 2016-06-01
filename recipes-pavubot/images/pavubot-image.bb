@@ -17,4 +17,7 @@ kernel-module-pwm-tiehrpwm kernel-module-rtc-omap kernel-module-musb-am335x \
 kernel-module-omap-wdt kernel-module-sch-fq-codel kernel-module-sha256-generic \
 kernel-module-sha256-arm kernel-module-hmac kernel-module-drbg \
 kernel-module-ctr kernel-module-ccm kernel-module-servo kernel-module-tb6612 \
-kernel-module-pwm-tiehrpwm nodejs-socketio v4l-utils"
+kernel-module-pwm-tiehrpwm nodejs-socketio v4l-utils \
+kernel-module-snd-usb-audio kernel-module-uvcvideo kernel-module-snd-hwdep \
+kernel-module-snd-usbmidi-lib kernel-module-snd-rawmidi \
+kernel-module-videobuf2-vmalloc"
