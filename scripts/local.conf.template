@@ -22,3 +22,5 @@ PACKAGECONFIG_append_pn-qemu-native = " sdl"
 PACKAGECONFIG_append_pn-nativesdk-qemu = " sdl"
 
 CONF_VERSION = "1"
+
+LICENSE_FLAGS_WHITELIST = "commercial"
