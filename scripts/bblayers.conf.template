@@ -12,5 +12,6 @@ BBLAYERS ?= " \
   {BUILD_DIR}/meta-ti \
   {BUILD_DIR}/meta-oe/meta-python \
   {BUILD_DIR}/meta-oe/meta-networking \
+  {BUILD_DIR}/meta-nodejs \
   {BUILD_DIR}/meta-pavubot \
   "
