@@ -14,4 +14,7 @@ kernel-module-wkup-m3-ipc kernel-module-ti-emif-sram kernel-module-remoteproc \
 kernel-module-virtio kernel-module-virtio-ring kernel-module-omap-aes-driver \
 kernel-module-omap-sham kernel-module-omap-rng kernel-module-rng-core \
 kernel-module-pwm-tiehrpwm kernel-module-rtc-omap kernel-module-musb-am335x \
-kernel-module-omap-wdt kernel-module-sch-fq-codel"
+kernel-module-omap-wdt kernel-module-sch-fq-codel kernel-module-sha256-generic \
+kernel-module-sha256-arm kernel-module-hmac kernel-module-drbg \
+kernel-module-ctr kernel-module-ccm kernel-module-servo kernel-module-tb6612 \
+kernel-module-pwm-tiehrpwm"
