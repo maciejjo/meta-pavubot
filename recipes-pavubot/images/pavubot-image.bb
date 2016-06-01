@@ -20,4 +20,4 @@ kernel-module-ctr kernel-module-ccm kernel-module-servo kernel-module-tb6612 \
 kernel-module-pwm-tiehrpwm nodejs-socketio v4l-utils \
 kernel-module-snd-usb-audio kernel-module-uvcvideo kernel-module-snd-hwdep \
 kernel-module-snd-usbmidi-lib kernel-module-snd-rawmidi \
-kernel-module-videobuf2-vmalloc nodejs-chokidar"
+kernel-module-videobuf2-vmalloc nodejs-chokidar nodejs-command-line-args"
