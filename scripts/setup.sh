@@ -1,9 +1,11 @@
 #!/bin/bash
 
-
 MYPATH="$(readlink -f $(dirname "${BASH_SOURCE[0]}"))"
 
 . ${MYPATH}/config.sh
+
+echo "Pulling image from Docker hub..."
+docker pull ${DOCKER_IMAGE}
 
 mkdir -p "${TARGET_DIR}/conf"
 
