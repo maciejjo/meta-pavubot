@@ -1,0 +1,172 @@
+diff --git a/hcsr04.c b/hcsr04.c
+index b29015f..1a3550f 100644
+--- a/hcsr04.c
++++ b/hcsr04.c
+@@ -1,65 +1,42 @@
++/** Program to load a PRU program that flashes an LED until a button is
++*   pressed. By Derek Molloy, for the book Exploring BeagleBone
++*   based on the example code at:
++*   http://processors.wiki.ti.com/index.php/PRU_Linux_Application_Loader_API_Guide
++*/
++
+ #include <stdio.h>
+ #include <stdlib.h>
+ #include <prussdrv.h>
+ #include <pruss_intc_mapping.h>
+-#include <errno.h>
+-#include <string.h>
+-
+-#include <sys/types.h>
+-#include <sys/stat.h>
+-#include <fcntl.h>
+ 
+-#define USECS_DIV 100.0
+-#define HCSR04_DIV 58.0
++#define PRU_NUM	0   // using PRU0 for these examples
+ 
+-int main()
++int main (void)
+ {
+-	void *pru0_memory;
+-	unsigned int *pru0_memory_uint;
+-	int distance_samples;
+-	int n;
+-	int ret;
+-	int fd;
+-	char name[32];
+-
+-	tpruss_intc_initdata pruss_intc_initdata = PRUSS_INTC_INITDATA;
+-
+-	printf("Welcome to the hydraulic PRUSS channel\n");
+-
+-	prussdrv_init();
+-	printf("hydraulic PRUSS init complete\n");
+-	ret = prussdrv_open(PRU_EVTOUT_0);
+-	printf("prussdrv_open complete, returned %d\n", ret);
+-
+-	sprintf(name, "/dev/uio%d", PRU_EVTOUT_0);
+-	fd  = open(name, O_RDWR | O_SYNC);
+-	if (fd == -1) {
+-		printf("Oh dear, something went wrong with open()! %s\n",
+-		strerror(errno));
+-		return -1;
+-	} else {
+-		printf("Nie no kurwa wszystko działa :)\n");
+-	}
+-
+-
+-	prussdrv_pruintc_init(&pruss_intc_initdata);
+-	printf("prussdrv_pruintc_init complete\n");
+-	prussdrv_map_prumem(PRUSS0_PRU0_DATARAM, &pru0_memory);
+-	printf("prussdrv_map_prumem complete\n");
+-	pru0_memory_uint = (unsigned int*)pru0_memory;
+-
+-	ret = prussdrv_exec_program(0, "/lib/firmware/pru-hcsr04/hcsr04.bin");
+-	printf("prussdrv_exec_program complete, rv = %d\n", ret);
+-
+-	n = prussdrv_pru_wait_event(PRU_EVTOUT_0);
+-	printf("prussdrv_pru_wait_event complete\n");
+-	distance_samples = *pru0_memory_uint;
+-
+-	printf("Measured distance: %f cm\n", (float)distance_samples / (USECS_DIV * HCSR04_DIV));
+-
+-	prussdrv_pru_disable(0);
+-	printf("prussdrv_pru_disable complete\n");
+-	prussdrv_exit();
+-	printf("prussdrv_exit complete\n");
+-	return 0;
++   if(getuid()!=0){
++      printf("You must run this program as root. Exiting.\n");
++      exit(EXIT_FAILURE);
++   }
++   // Initialize structure used by prussdrv_pruintc_intc
++   // PRUSS_INTC_INITDATA is found in pruss_intc_mapping.h
++   tpruss_intc_initdata pruss_intc_initdata = PRUSS_INTC_INITDATA;
++
++   // Allocate and initialize memory
++   prussdrv_init ();
++   prussdrv_open (PRU_EVTOUT_0);
++
++   // Map PRU's interrupts
++   prussdrv_pruintc_init(&pruss_intc_initdata);
++   
++   // Load and execute the PRU program on the PRU
++   prussdrv_exec_program (PRU_NUM, "./ledButton.bin");
++
++   // Wait for event completion from PRU, returns the PRU_EVTOUT_0 number
++   int n = prussdrv_pru_wait_event (PRU_EVTOUT_0);
++   printf("EBB PRU program completed, event number %d.\n", n);
++
++   // Disable PRU and close memory mappings
++   prussdrv_pru_disable(PRU_NUM);
++   prussdrv_exit ();
++   return EXIT_SUCCESS;
+ }
+diff --git a/hcsr04.p b/hcsr04.p
+index fdc8705..7fbedff 100644
+--- a/hcsr04.p
++++ b/hcsr04.p
+@@ -1,36 +1,33 @@
+-.origin 0
+-.entrypoint START
++// PRUSS program to flash a LED on P9_27 (pru0_pru_r30_5) until a button 
++// that is connected to P9_28 (pru0_pru_r31_3 is pressed). This program 
++// was writen by Derek Molloy for the book Exploring BeagleBone
+ 
+-#define TRIGGER_SIGNAL_US 10
+-#define INS_PER_US 200
+-#define INS_PER_LOOP 2
+-#define TRIGGER_DELAY (TRIGGER_SIGNAL_US * INS_PER_US) / INS_PER_LOOP
+-#define DELAY_1MS (1000 * INS_PER_US) / INS_PER_LOOP
+-#define PRU0_R31_VEC_VALID 32
+-#define PRU_EVTOUT_0 3
++.origin 0                        // start of program in PRU memory
++.entrypoint START                // program entry point (for a debugger)
+ 
+-START:
+-    MOV r0, TRIGGER_DELAY   //load trigger signal duration
+-    SET r30.t5              //set trigger pin high
+-
+-TRIGGERING:                 //delay 10us
+-    SUB r0, r0, 1
+-    QBNE TRIGGERING, r0, 0
+-    CLR r30.t5              //after 10us set trigger pin low
++#define INS_PER_US   200         // 5ns per instruction
++#define INS_PER_DELAY_LOOP 2     // two instructions per delay loop
++                                 // set up a 50ms delay
++#define DELAY  50 * 1000 * (INS_PER_US / INS_PER_DELAY_LOOP) 
+ 
+-//measure echo signal duration
+-    MOV r1, 0               //will stor echo signal duration
+-    WBS r31.t3              //wait till echo pin goes high
++#define PRU0_R31_VEC_VALID 32    // allows notification of program completion
++#define PRU_EVTOUT_0    3        // the event number that is sent back
+ 
+-ECHOING:
+-    ADD r1, r1, 1
+-    QBBS ECHOING, r31.t3    //jump to ECHOING if echo pin is high
++START:
++	SET	r30.t5           // turn on the output pin (LED on)
++	MOV	r0, DELAY        // store the length of the delay in REG0
++DELAYON:
++	SUB	r0, r0, 1        // Decrement REG0 by 1
++	QBNE	DELAYON, r0, 0   // Loop to DELAYON, unless REG0=0
++LEDOFF: 
++	CLR	r30.t5           // clear the output bin (LED off)
++	MOV	r0, DELAY        // Reset REG0 to the length of the delay
++DELAYOFF:
++	SUB	r0, r0, 1        // decrement REG0 by 1
++	QBNE	DELAYOFF, r0, 0  // Loop to DELAYOFF, unless REG0=0
+ 
+-    //store echo signal duration in memory
+-    //duration of this signal is in 10ns units
+-    MOV r0, 0x00000000      //address in memory where data goes to
+-    SBBO r1, r0, 0, 4       //store data in memory
++	QBBC	START, r31.t3    // is the button pressed? If not, loop
+ 
+-END:
+-    MOV R31.b0, PRU0_R31_VEC_VALID | PRU_EVTOUT_0
+-    HALT
++END:                             // notify the calling app that finished
++	MOV	R31.b0, PRU0_R31_VEC_VALID | PRU_EVTOUT_0
++	HALT                     // halt the pru program

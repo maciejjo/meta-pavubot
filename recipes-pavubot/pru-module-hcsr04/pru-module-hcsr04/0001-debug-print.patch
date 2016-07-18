@@ -1,0 +1,80 @@
+From bf366936e36750c5cc7d86ee328d96daf424633b Mon Sep 17 00:00:00 2001
+From: Maciej Sobkowski <maciejjo@maciejjo.pl>
+Date: Mon, 13 Jun 2016 22:29:11 +0200
+Subject: [PATCH] debug print
+
+---
+ hcsr04.c | 34 ++++++++++++++++++++++++++++++++--
+ 1 file changed, 32 insertions(+), 2 deletions(-)
+
+diff --git a/hcsr04.c b/hcsr04.c
+index 05eebc1..b29015f 100644
+--- a/hcsr04.c
++++ b/hcsr04.c
+@@ -2,6 +2,12 @@
+ #include <stdlib.h>
+ #include <prussdrv.h>
+ #include <pruss_intc_mapping.h>
++#include <errno.h>
++#include <string.h>
++
++#include <sys/types.h>
++#include <sys/stat.h>
++#include <fcntl.h>
+ 
+ #define USECS_DIV 100.0
+ #define HCSR04_DIV 58.0
+@@ -12,24 +18,48 @@ int main()
+ 	unsigned int *pru0_memory_uint;
+ 	int distance_samples;
+ 	int n;
++	int ret;
++	int fd;
++	char name[32];
+ 
+ 	tpruss_intc_initdata pruss_intc_initdata = PRUSS_INTC_INITDATA;
+ 
++	printf("Welcome to the hydraulic PRUSS channel\n");
++
+ 	prussdrv_init();
+-	prussdrv_open(PRU_EVTOUT_0);
++	printf("hydraulic PRUSS init complete\n");
++	ret = prussdrv_open(PRU_EVTOUT_0);
++	printf("prussdrv_open complete, returned %d\n", ret);
++
++	sprintf(name, "/dev/uio%d", PRU_EVTOUT_0);
++	fd  = open(name, O_RDWR | O_SYNC);
++	if (fd == -1) {
++		printf("Oh dear, something went wrong with open()! %s\n",
++		strerror(errno));
++		return -1;
++	} else {
++		printf("Nie no kurwa wszystko działa :)\n");
++	}
++
+ 
+ 	prussdrv_pruintc_init(&pruss_intc_initdata);
++	printf("prussdrv_pruintc_init complete\n");
+ 	prussdrv_map_prumem(PRUSS0_PRU0_DATARAM, &pru0_memory);
++	printf("prussdrv_map_prumem complete\n");
+ 	pru0_memory_uint = (unsigned int*)pru0_memory;
+ 
+-	prussdrv_exec_program(0, "/lib/firmware/pru-hcsr04/hcsr04.bin");
++	ret = prussdrv_exec_program(0, "/lib/firmware/pru-hcsr04/hcsr04.bin");
++	printf("prussdrv_exec_program complete, rv = %d\n", ret);
+ 
+ 	n = prussdrv_pru_wait_event(PRU_EVTOUT_0);
++	printf("prussdrv_pru_wait_event complete\n");
+ 	distance_samples = *pru0_memory_uint;
+ 
+ 	printf("Measured distance: %f cm\n", (float)distance_samples / (USECS_DIV * HCSR04_DIV));
+ 
+ 	prussdrv_pru_disable(0);
++	printf("prussdrv_pru_disable complete\n");
+ 	prussdrv_exit();
++	printf("prussdrv_exit complete\n");
+ 	return 0;
+ }
+-- 
+2.8.3
+
