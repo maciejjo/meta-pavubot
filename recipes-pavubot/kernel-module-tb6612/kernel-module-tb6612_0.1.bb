@@ -4,10 +4,8 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=12f884d2ae1ff87c09e5b7ccc2c4ca7e"
 
 inherit module
 
-SRC_URI = "file://Makefile \
-           file://tb6612.c \
-           file://COPYING \
-          "
+SRC_URI = "git://github.com/maciejjo/tb6612.git"
+SRCREV = "c518ab5f7be2a7336274e1f6af036845d4f85afa"
 
 S = "${WORKDIR}"
 
