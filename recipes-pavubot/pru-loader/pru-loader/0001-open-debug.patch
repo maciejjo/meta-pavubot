@@ -1,0 +1,118 @@
+From 4d6edad27485d4630d0f1b27dc21f1d54d46c18c Mon Sep 17 00:00:00 2001
+From: Maciej Sobkowski <maciejjo@maciejjo.pl>
+Date: Tue, 14 Jun 2016 19:46:33 +0200
+Subject: [PATCH] open debug
+
+---
+ pru_sw/app_loader/interface/prussdrv.c | 38 +++++++++++++++++++++++++++-------
+ 1 file changed, 31 insertions(+), 7 deletions(-)
+
+diff --git a/pru_sw/app_loader/interface/prussdrv.c b/pru_sw/app_loader/interface/prussdrv.c
+index fbde4a7..fab1585 100644
+--- a/pru_sw/app_loader/interface/prussdrv.c
++++ b/pru_sw/app_loader/interface/prussdrv.c
+@@ -50,6 +50,9 @@
+ #include <prussdrv.h>
+ #include "__prussdrv.h"
+ #include <stdio.h>
++#include <errno.h>
++#include <string.h>
++#define __DEBUG
+ 
+ #ifdef __DEBUG
+ #define DEBUG_PRINTF(FORMAT, ...) fprintf(stderr, FORMAT, ## __VA_ARGS__)
+@@ -73,27 +76,39 @@ int __prussdrv_memmap_init(void)
+             if (prussdrv.fd[i])
+                 break;
+         }
+-        if (i == NUM_PRU_HOSTIRQS)
++        if (i == NUM_PRU_HOSTIRQS) {
+             return -1;
++	    printf("1\n");
++	}
+         else
+             prussdrv.mmap_fd = prussdrv.fd[i];
+     }
+     fd = open(PRUSS_UIO_DRV_PRUSS_BASE, O_RDONLY);
++    printf("FD=%d\n", fd);
++    if (fd == -1) {
++    printf("Oh dear, something went wrong with open()! %s\n",
++           strerror(errno));
++    }
++
+     if (fd >= 0) {
+         read(fd, hexstring, PRUSS_UIO_PARAM_VAL_LEN);
+         prussdrv.pruss_phys_base =
+             strtoul(hexstring, NULL, HEXA_DECIMAL_BASE);
+         close(fd);
+-    } else
++    } else {
++	printf("1\n");
+         return -1;
++    }
+     fd = open(PRUSS_UIO_DRV_PRUSS_SIZE, O_RDONLY);
+     if (fd >= 0) {
+         read(fd, hexstring, PRUSS_UIO_PARAM_VAL_LEN);
+         prussdrv.pruss_map_size =
+             strtoul(hexstring, NULL, HEXA_DECIMAL_BASE);
+         close(fd);
+-    } else
++    } else {
++	printf("3\n");
+         return -1;
++    }
+ 
+     prussdrv.pru0_dataram_base =
+         mmap(0, prussdrv.pruss_map_size, PROT_READ | PROT_WRITE,
+@@ -197,8 +212,10 @@ int __prussdrv_memmap_init(void)
+         prussdrv.l3ram_phys_base =
+             strtoul(hexstring, NULL, HEXA_DECIMAL_BASE);
+         close(fd);
+-    } else
++    } else {
++	printf("4\n");
+         return -1;
++    }
+ 
+ 
+     fd = open(PRUSS_UIO_DRV_L3RAM_SIZE, O_RDONLY);
+@@ -207,8 +224,11 @@ int __prussdrv_memmap_init(void)
+         prussdrv.l3ram_map_size =
+             strtoul(hexstring, NULL, HEXA_DECIMAL_BASE);
+         close(fd);
+-    } else
++    } else {
++	printf("5\n");
+         return -1;
++    }
++
+ 
+     prussdrv.l3ram_base =
+         mmap(0, prussdrv.l3ram_map_size, PROT_READ | PROT_WRITE,
+@@ -221,8 +241,10 @@ int __prussdrv_memmap_init(void)
+         prussdrv.extram_phys_base =
+             strtoul(hexstring, NULL, HEXA_DECIMAL_BASE);
+         close(fd);
+-    } else
++    } else {
++	printf("6\n");
+         return -1;
++    }
+ 
+     fd = open(PRUSS_UIO_DRV_EXTRAM_SIZE, O_RDONLY);
+     if (fd >= 0) {
+@@ -230,8 +252,10 @@ int __prussdrv_memmap_init(void)
+         prussdrv.extram_map_size =
+             strtoul(hexstring, NULL, HEXA_DECIMAL_BASE);
+         close(fd);
+-    } else
++    } else {
++	printf("7\n");
+         return -1;
++    }
+ 
+ 
+     prussdrv.extram_base =
+-- 
+2.8.3
+

@@ -1,0 +1,28 @@
+From 08bc7bc5fe977bff916ee7982f66a0b7bd635398 Mon Sep 17 00:00:00 2001
+From: Maciej Sobkowski <maciejjo@maciejjo.pl>
+Date: Fri, 10 Jun 2016 12:51:54 +0200
+Subject: [PATCH] Delete hard-coded environment from Makefile
+
+---
+ pru_sw/app_loader/interface/Makefile | 4 ----
+ 1 file changed, 4 deletions(-)
+
+diff --git a/pru_sw/app_loader/interface/Makefile b/pru_sw/app_loader/interface/Makefile
+index eef9d9e..ee779ea 100644
+--- a/pru_sw/app_loader/interface/Makefile
++++ b/pru_sw/app_loader/interface/Makefile
+@@ -1,11 +1,7 @@
+ ROOTDIR = ..
+ TARGET = libprussdrv
+-CROSS_COMPILE?=arm-arago-linux-gnueabi-
+ PREFIX?=/usr/local
+ 
+-CC = $(CROSS_COMPILE)gcc
+-AR = $(CROSS_COMPILE)ar
+-
+ INCLUDEDIR = ../include
+ LIBDIR	   = ../lib
+ 
+-- 
+2.8.3
+
