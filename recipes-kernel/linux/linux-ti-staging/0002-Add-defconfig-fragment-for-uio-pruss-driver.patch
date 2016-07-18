@@ -13,13 +13,15 @@ new file mode 100644
 index 0000000..92de9c8
 --- /dev/null
 +++ b/ti_config_fragments/pruss_uio.cfg
-@@ -0,0 +1,6 @@
+@@ -0,0 +1,8 @@
 +##################################################
 +# TI PRUSS UIO driver
 +##################################################
 +# UIO Module
 +CONFIG_UIO=m
 +CONFIG_UIO_PRUSS=m
++CONFIG_UIO_PDRV_GENIRQ=m
++CONFIG_UIO_DMEM_GENIRQ=m
 -- 
 2.8.3
 
