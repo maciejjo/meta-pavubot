@@ -1,13 +1,16 @@
 SUMMARY = "Module for PWM servo motor"
+
 LICENSE = "GPLv2"
-LIC_FILES_CHKSUM = "file://COPYING;md5=12f884d2ae1ff87c09e5b7ccc2c4ca7e"
+LIC_FILES_CHKSUM = "file://COPYING;md5=b234ee4d69f5fce4486a80fdaf4a4263"
 
 inherit module
 
-SRC_URI = "git://github.com/maciejjo/pwm-servo.git"
-SRCREV = "30723ccf3825dd6e767a8b4d274f3280f9c6dfb3"
+PR="r2"
 
-S = "${WORKDIR}"
+SRC_URI = "git://github.com/maciejjo/pwm-servo.git"
+SRCREV = "502b09e2c11c1054a54be01b3fe6afb515208fd9"
+
+S = "${WORKDIR}/git"
 
 # The inherit of module.bbclass will automatically name module packages with
 # "kernel-module-" prefix as required by the oe-core build environment.
