@@ -4,7 +4,7 @@
 DESCRIPTION = ""
 HOMEPAGE = ""
 
-PR = "r10"
+PR = "r11"
 
 LICENSE = "GPLv2"
 LIC_FILES_CHKSUM = "file://${COREBASE}/LICENSE;md5=4d92cd373abda3937c2bc47fbc49d690"
@@ -19,6 +19,8 @@ SRC_URI += " file://0001-debug-print.patch "
 SRC_URI += " file://ledblink.patch "
 
 S = "${WORKDIR}/git"
+
+do_configure[noexec] = "1"
 
 do_compile() {
     oe_runmake

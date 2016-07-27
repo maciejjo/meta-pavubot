@@ -5,7 +5,7 @@ DESCRIPTION = "PRU assembler"
 LICENSE = "BSD"
 LIC_FILES_CHKSUM = "file://pru_sw/utils/LICENCE.txt;md5=a4120726312222872e582a3f2851144f"
 
-PR = "r3"
+PR = "r4"
 
 SRC_URI = "git://github.com/beagleboard/am335x_pru_package.git"
 SRC_URI += " file://0001-Delete-hard-coded-environment-from-Makefile.patch "
@@ -13,6 +13,8 @@ SRC_URI += " file://0001-open-debug.patch "
 SRCREV = "5f374ad57cc195f28bf5e585c3d446aba6ee7096"
 
 S = "${WORKDIR}/git"
+
+do_configure[noexec] = "1"
 
 do_compile() {
     cd ${S}/pru_sw/app_loader/interface
