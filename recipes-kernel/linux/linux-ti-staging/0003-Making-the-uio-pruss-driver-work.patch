@@ -1,7 +1,7 @@
-From dbca82fb677ed9436b993fe3cdabeb9621759054 Mon Sep 17 00:00:00 2001
+From 20f0ecfa32aa4501e408e83b94db7a1f111ec646 Mon Sep 17 00:00:00 2001
 From: Elias Bakken <elias@iagent.no>
 Date: Thu, 9 Apr 2015 19:25:53 +0200
-Subject: [PATCH] Making the uio pruss driver work
+Subject: [PATCH 3/3] Making the uio pruss driver work
 
 ---
  .../devicetree/bindings/arm/omap/omap.txt          |   2 +
@@ -274,5 +274,5 @@ index ca9e2fa..fe3fb6f 100644
  };
  
 -- 
-2.8.3
+2.9.0
 

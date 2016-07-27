@@ -1,10 +1,7 @@
 FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}:"
 
-SRC_URI += " file://defconfig"
+SRC_URI += " file://ti33x/defconfig"
 
-SRC_URI_append += " file://0001-pavubot-DT-changes.patch "
-SRC_URI_append += " file://0002-Add-defconfig-fragment-for-uio-pruss-driver.patch " 
-SRC_URI_append += " file://0003-pavubot-add-fragment-with-drivers-for-pavubot.patch " 
-SRC_URI_append += " file://0004-Add-new-defconfig-for-Orangutan-robot.patch " 
-SRC_URI_append += " file://0001-Making-the-uio-pruss-driver-work.patch " 
-
+SRC_URI_append += " file://0001-Pavubot-kernel-config-modifications.patch "
+SRC_URI_append += " file://0002-pavubot-DT-changes.patch "
+SRC_URI_append += " file://0003-Making-the-uio-pruss-driver-work.patch "
