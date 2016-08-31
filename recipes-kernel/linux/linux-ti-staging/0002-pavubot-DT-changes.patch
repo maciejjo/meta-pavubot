@@ -1,30 +1,62 @@
-From 081d4c5ab490275abaf22edf08e85d6c6ce83709 Mon Sep 17 00:00:00 2001
+From 88509a9e626be8e6857c6fef4b809032e889b23a Mon Sep 17 00:00:00 2001
 From: Maciej Sobkowski <maciejjo@maciejjo.pl>
 Date: Mon, 25 Jul 2016 20:40:07 +0200
 Subject: [PATCH 2/3] pavubot DT changes
 
 ---
- arch/arm/boot/dts/am335x-boneblack.dts | 140 +++++++++++++++++++++++++++------
- arch/arm/boot/dts/am33xx.dtsi          |  81 ++++---------------
- 2 files changed, 132 insertions(+), 89 deletions(-)
+ arch/arm/boot/dts/am335x-boneblack.dts | 207 ++++++++++++++++++---------------
+ arch/arm/boot/dts/am33xx.dtsi          |  83 +++----------
+ 2 files changed, 131 insertions(+), 159 deletions(-)
 
 diff --git a/arch/arm/boot/dts/am335x-boneblack.dts b/arch/arm/boot/dts/am335x-boneblack.dts
-index 3d993ae..68fb1b9 100644
+index 3d993ae..5c5f54e 100644
 --- a/arch/arm/boot/dts/am335x-boneblack.dts
 +++ b/arch/arm/boot/dts/am335x-boneblack.dts
-@@ -33,6 +33,122 @@
+@@ -33,108 +33,145 @@
  	bus-width = <8>;
  	status = "okay";
  };
 +&am33xx_pinmux {
-+
+ 
+-&cpu0_opp_table {
+-	/*
+-	 * All PG 2.0 silicon may not support 1GHz but some of the early
+-	 * BeagleBone Blacks have PG 2.0 silicon which is guaranteed
+-	 * to support 1GHz OPP so enable it for PG 2.0 on this board.
+-	 */
+-	oppnitro@1000000000 {
+-		opp-supported-hw = <0x06 0x0100>;
 +	/* Pins configuration for various appliances */
 +	servo_pwm_P9_16: pinmux_pwm_P9_16_pins {
 +		pinctrl-single,pins = <0x04c  0x6>; /* P9_16 (ZCZ ball T14) | MODE 6 */
-+	};
-+
+ 	};
+-};
+ 
+-&am33xx_pinmux {
+-	nxp_hdmi_bonelt_pins: nxp_hdmi_bonelt_pins {
 +	dc_motor_driver_pins: pinmux_dc_motor_driver {
-+		pinctrl-single,pins = <
+ 		pinctrl-single,pins = <
+-			0x1b0 0x03      /* xdma_event_intr0, OMAP_MUX_MODE3 | AM33XX_PIN_OUTPUT */
+-			0xa0 0x08       /* lcd_data0.lcd_data0, OMAP_MUX_MODE0 | AM33XX_PIN_OUTPUT | AM33XX_PULL_DISA */
+-			0xa4 0x08       /* lcd_data1.lcd_data1, OMAP_MUX_MODE0 | AM33XX_PIN_OUTPUT | AM33XX_PULL_DISA */
+-			0xa8 0x08       /* lcd_data2.lcd_data2, OMAP_MUX_MODE0 | AM33XX_PIN_OUTPUT | AM33XX_PULL_DISA */
+-			0xac 0x08       /* lcd_data3.lcd_data3, OMAP_MUX_MODE0 | AM33XX_PIN_OUTPUT | AM33XX_PULL_DISA */
+-			0xb0 0x08       /* lcd_data4.lcd_data4, OMAP_MUX_MODE0 | AM33XX_PIN_OUTPUT | AM33XX_PULL_DISA */
+-			0xb4 0x08       /* lcd_data5.lcd_data5, OMAP_MUX_MODE0 | AM33XX_PIN_OUTPUT | AM33XX_PULL_DISA */
+-			0xb8 0x08       /* lcd_data6.lcd_data6, OMAP_MUX_MODE0 | AM33XX_PIN_OUTPUT | AM33XX_PULL_DISA */
+-			0xbc 0x08       /* lcd_data7.lcd_data7, OMAP_MUX_MODE0 | AM33XX_PIN_OUTPUT | AM33XX_PULL_DISA */
+-			0xc0 0x08       /* lcd_data8.lcd_data8, OMAP_MUX_MODE0 | AM33XX_PIN_OUTPUT | AM33XX_PULL_DISA */
+-			0xc4 0x08       /* lcd_data9.lcd_data9, OMAP_MUX_MODE0 | AM33XX_PIN_OUTPUT | AM33XX_PULL_DISA */
+-			0xc8 0x08       /* lcd_data10.lcd_data10, OMAP_MUX_MODE0 | AM33XX_PIN_OUTPUT | AM33XX_PULL_DISA */
+-			0xcc 0x08       /* lcd_data11.lcd_data11, OMAP_MUX_MODE0 | AM33XX_PIN_OUTPUT | AM33XX_PULL_DISA */
+-			0xd0 0x08       /* lcd_data12.lcd_data12, OMAP_MUX_MODE0 | AM33XX_PIN_OUTPUT | AM33XX_PULL_DISA */
+-			0xd4 0x08       /* lcd_data13.lcd_data13, OMAP_MUX_MODE0 | AM33XX_PIN_OUTPUT | AM33XX_PULL_DISA */
+-			0xd8 0x08       /* lcd_data14.lcd_data14, OMAP_MUX_MODE0 | AM33XX_PIN_OUTPUT | AM33XX_PULL_DISA */
+-			0xdc 0x08       /* lcd_data15.lcd_data15, OMAP_MUX_MODE0 | AM33XX_PIN_OUTPUT | AM33XX_PULL_DISA */
+-			0xe0 0x00       /* lcd_vsync.lcd_vsync, OMAP_MUX_MODE0 | AM33XX_PIN_OUTPUT */
+-			0xe4 0x00       /* lcd_hsync.lcd_hsync, OMAP_MUX_MODE0 | AM33XX_PIN_OUTPUT */
+-			0xe8 0x00       /* lcd_pclk.lcd_pclk, OMAP_MUX_MODE0 | AM33XX_PIN_OUTPUT */
+-			0xec 0x00       /* lcd_ac_bias_en.lcd_ac_bias_en, OMAP_MUX_MODE0 | AM33XX_PIN_OUTPUT */
 +			0x020  0x04
 +			0x024  0x04
 +			0x090  0x2F
@@ -32,8 +64,12 @@ index 3d993ae..68fb1b9 100644
 +			0x034  0x2F
 +			0x03c  0x2F
 +			0x02c  0x2F
-+		>;
-+	};
+ 		>;
+ 	};
+-	nxp_hdmi_bonelt_off_pins: nxp_hdmi_bonelt_off_pins {
+-		pinctrl-single,pins = <
+-			0x1b0 0x03      /* xdma_event_intr0, OMAP_MUX_MODE3 | AM33XX_PIN_OUTPUT */
+-		>;
 +
 +	dagu_encoder_l_pins: pinmux_dagu_encoder_left {
 +		pinctrl-single,pins = <0x0B8 0x2F>;
@@ -41,21 +77,32 @@ index 3d993ae..68fb1b9 100644
 +
 +	dagu_encoder_r_pins: pinmux_dagu_encoder_right {
 +		pinctrl-single,pins = <0x0B0 0x2F>;
-+	};
-+
+ 	};
+ 
+-	mcasp0_pins: mcasp0_pins {
 +	mpu_6500_pins: pinmux_mpu_6500 {
 +		pinctrl-single,pins = <0x184 0x2F>;
 +	};
 +
 +	pru_hcsr04_pins: pinmux_pru_hcsr04 {
-+		pinctrl-single,pins = <
+ 		pinctrl-single,pins = <
+-			AM33XX_IOPAD(0x9ac, PIN_INPUT_PULLUP | MUX_MODE0) /* mcasp0_ahcklx.mcasp0_ahclkx */
+-			AM33XX_IOPAD(0x99c, PIN_OUTPUT_PULLDOWN | MUX_MODE2) /* mcasp0_ahclkr.mcasp0_axr2*/
+-			AM33XX_IOPAD(0x994, PIN_OUTPUT_PULLUP | MUX_MODE0) /* mcasp0_fsx.mcasp0_fsx */
+-			AM33XX_IOPAD(0x990, PIN_OUTPUT_PULLDOWN | MUX_MODE0) /* mcasp0_aclkx.mcasp0_aclkx */
+-			AM33XX_IOPAD(0x86c, PIN_OUTPUT_PULLDOWN | MUX_MODE7) /* gpmc_a11.GPIO1_27 */
 +			0x1A4 0x05
 +			0x19C 0x26
-+		>;
-+	};
+ 		>;
+ 	};
 +
-+};
-+
+ };
+ 
+-&lcdc {
+-	status = "okay";
+-	port {
+-		lcdc_0: endpoint@0 {
+-			remote-endpoint = <&hdmi_0>;
 +/ {
 +	ocp {
 +		servo: servo {
@@ -70,8 +117,14 @@ index 3d993ae..68fb1b9 100644
 +			enabled = <0>;
 +			duty = <0>;
 +			status = "okay";
-+		};
-+
+ 		};
+-	};
+-};
+ 
+-&i2c0 {
+-	tda19988: tda19988 {
+-		compatible = "nxp,tda998x";
+-		reg = <0x70>;
 +		dc_motor_driver: tb6612fng {
 +			compatible = "toshiba,tb6612fng";
 +
@@ -96,71 +149,52 @@ index 3d993ae..68fb1b9 100644
 +
 +			pinctrl-names = "default";
 +			pinctrl-0 = <&dagu_encoder_l_pins>;
-+
+ 
+-		pinctrl-names = "default", "off";
+-		pinctrl-0 = <&nxp_hdmi_bonelt_pins>;
+-		pinctrl-1 = <&nxp_hdmi_bonelt_off_pins>;
 +			interrupt-parent = <&gpio2>;
 +			interrupts = <12 1>;
 +		};
 +
 +		rotary_encoder_right: dagu_encoder@210 {
 +			compatible = "dagu,hall-encoder";
-+
+ 
+-		#sound-dai-cells = <0>;
+-		audio-ports = <	AFMT_I2S	0x03>;
 +			pinctrl-names = "default";
 +			pinctrl-0 = <&dagu_encoder_r_pins>;
-+
+ 
+-		ports {
+-			port@0 {
+-				hdmi_0: endpoint@0 {
+-					remote-endpoint = <&lcdc_0>;
+-				};
+-			};
 +			interrupt-parent = <&gpio2>;
 +			interrupts = <10 1>;
-+		};
+ 		};
 +
-+	};
-+};
-+
-+&pruss {
-+	status = "okay";
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pru_hcsr04_pins>;
-+};
-+
-+
-+&i2c2 {
-+	mpu6500@68 {
-+		compatible = "invensense,mpu6500";
-+		reg = <0x68>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&mpu_6500_pins>;
-+		interrupt-parent = <&gpio0>;
-+		interrupts = <15 1>;
-+	};
-+
-+};
- 
- &cpu0_opp_table {
- 	/*
-@@ -76,16 +192,6 @@
- 			0x1b0 0x03      /* xdma_event_intr0, OMAP_MUX_MODE3 | AM33XX_PIN_OUTPUT */
- 		>;
  	};
--
--	mcasp0_pins: mcasp0_pins {
--		pinctrl-single,pins = <
--			AM33XX_IOPAD(0x9ac, PIN_INPUT_PULLUP | MUX_MODE0) /* mcasp0_ahcklx.mcasp0_ahclkx */
--			AM33XX_IOPAD(0x99c, PIN_OUTPUT_PULLDOWN | MUX_MODE2) /* mcasp0_ahclkr.mcasp0_axr2*/
--			AM33XX_IOPAD(0x994, PIN_OUTPUT_PULLUP | MUX_MODE0) /* mcasp0_fsx.mcasp0_fsx */
--			AM33XX_IOPAD(0x990, PIN_OUTPUT_PULLDOWN | MUX_MODE0) /* mcasp0_aclkx.mcasp0_aclkx */
--			AM33XX_IOPAD(0x86c, PIN_OUTPUT_PULLDOWN | MUX_MODE7) /* gpmc_a11.GPIO1_27 */
--		>;
--	};
  };
  
- &lcdc {
-@@ -123,20 +229,6 @@
- 	system-power-controller;
+-&rtc {
+-	system-power-controller;
++&tscadc {
++	adc {
++		ti,adc-channels = <5>;
++		ti,chan-step-avg = <0x16>;
++		ti,chan-step-opendelay = <0x98>;
++		ti,chan-step-sampledelay = <0x0>;
++	};
  };
  
 -&mcasp0	{
 -	#sound-dai-cells = <0>;
 -	pinctrl-names = "default";
 -	pinctrl-0 = <&mcasp0_pins>;
--	status = "okay";
++&pruss {
+ 	status = "okay";
 -	op-mode = <0>;	/* MCASP_IIS_MODE */
 -	tdm-slots = <2>;
 -	serial-dir = <	/* 0: INACTIVE, 1: TX, 2: RX */
@@ -168,13 +202,62 @@ index 3d993ae..68fb1b9 100644
 -		>;
 -	tx-num-evt = <32>;
 -	rx-num-evt = <32>;
--};
--
++	pinctrl-names = "default";
++	pinctrl-0 = <&pru_hcsr04_pins>;
++};
++
++
++&i2c2 {
++	/*mpu6500@68 {
++		compatible = "invensense,mpu6500";
++		reg = <0x68>;
++		pinctrl-names = "default";
++		pinctrl-0 = <&mpu_6500_pins>;
++		interrupt-parent = <&gpio0>;
++		interrupts = <15 1>;
++	};*/
++
++};
++
++&cpu0_opp_table {
++	/*
++	 * All PG 2.0 silicon may not support 1GHz but some of the early
++	 * BeagleBone Blacks have PG 2.0 silicon which is guaranteed
++	 * to support 1GHz OPP so enable it for PG 2.0 on this board.
++	 */
++	oppnitro@1000000000 {
++		opp-supported-hw = <0x06 0x0100>;
++	};
++};
++
++&rtc {
++	system-power-controller;
+ };
+ 
  &sgx {
- 	status = "okay";
+@@ -155,20 +192,4 @@
+ 		enable-gpios = <&gpio1 27 0>; /* BeagleBone Black Clk enable on GPIO1_27 */
+ 	};
+ 
+-	sound {
+-		compatible = "simple-audio-card";
+-		simple-audio-card,name = "TI BeagleBone Black";
+-		simple-audio-card,format = "i2s";
+-		simple-audio-card,bitclock-master = <&dailink0_master>;
+-		simple-audio-card,frame-master = <&dailink0_master>;
+-
+-		dailink0_master: simple-audio-card,cpu {
+-			sound-dai = <&mcasp0>;
+-			clocks = <&clk_mcasp0>;
+-		};
+-
+-		simple-audio-card,codec {
+-			sound-dai = <&tda19988>;
+-		};
+-	};
  };
 diff --git a/arch/arm/boot/dts/am33xx.dtsi b/arch/arm/boot/dts/am33xx.dtsi
-index 0476c77..748ca25 100644
+index d952e55..0b61cfb 100644
 --- a/arch/arm/boot/dts/am33xx.dtsi
 +++ b/arch/arm/boot/dts/am33xx.dtsi
 @@ -588,6 +588,18 @@
@@ -196,15 +279,15 @@ index 0476c77..748ca25 100644
  		rtc: rtc@44e3e000 {
  			compatible = "ti,am3352-rtc", "ti,da830-rtc";
  			reg = <0x44e3e000 0x1000>;
-@@ -764,7 +776,7 @@
- 			ti,hwmods = "epwmss0";
+@@ -794,7 +806,7 @@
+ 			ti,hwmods = "epwmss1";
  			#address-cells = <1>;
  			#size-cells = <1>;
 -			status = "disabled";
 +			status = "okay";
- 			ranges = <0x48300100 0x48300100 0x80   /* ECAP */
- 				  0x48300180 0x48300180 0x80   /* EQEP */
- 				  0x48300200 0x48300200 0x80>; /* EHRPWM */
+ 			ranges = <0x48302100 0x48302100 0x80   /* ECAP */
+ 				  0x48302180 0x48302180 0x80   /* EQEP */
+ 				  0x48302200 0x48302200 0x80>; /* EHRPWM */
 @@ -814,7 +826,7 @@
  				reg = <0x48302200 0x80>;
  				clocks = <&ehrpwm1_tbclk>;
@@ -232,7 +315,7 @@ index 0476c77..748ca25 100644
  			};
  		};
  
-@@ -917,67 +929,6 @@
+@@ -916,67 +928,6 @@
  			reg = <0x40302000 0xe000>; /* 64k - 8k */
  		};
  
@@ -300,6 +383,15 @@ index 0476c77..748ca25 100644
  		elm: elm@48080000 {
  			compatible = "ti,am3352-elm";
  			reg = <0x48080000 0x2000>;
+@@ -1000,7 +951,7 @@
+ 			interrupt-parent = <&intc>;
+ 			interrupts = <16>;
+ 			ti,hwmods = "adc_tsc";
+-			status = "disabled";
++			status = "okay";
+ 
+ 			tsc {
+ 				compatible = "ti,am3359-tsc";
 -- 
-2.9.0
+2.9.3
 

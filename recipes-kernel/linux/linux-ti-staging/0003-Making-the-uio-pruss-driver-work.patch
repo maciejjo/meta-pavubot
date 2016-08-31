@@ -1,4 +1,4 @@
-From 20f0ecfa32aa4501e408e83b94db7a1f111ec646 Mon Sep 17 00:00:00 2001
+From 15b66b6e76aa2359997e88e17d1ee43f6d206d5b Mon Sep 17 00:00:00 2001
 From: Elias Bakken <elias@iagent.no>
 Date: Thu, 9 Apr 2015 19:25:53 +0200
 Subject: [PATCH 3/3] Making the uio pruss driver work
@@ -274,5 +274,5 @@ index ca9e2fa..fe3fb6f 100644
  };
  
 -- 
-2.9.0
+2.9.3
 
