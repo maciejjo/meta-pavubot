@@ -1,0 +1,25 @@
+From 3c48e9ff4256a153a6795b2b99f3ca0472a8734a Mon Sep 17 00:00:00 2001
+From: Maciej Sobkowski <maciejjo@maciejjo.pl>
+Date: Tue, 23 Aug 2016 22:25:45 +0200
+Subject: [PATCH] Fix recognition confidence prediction
+
+---
+ modules/face/include/opencv2/face.hpp | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/modules/face/include/opencv2/face.hpp b/modules/face/include/opencv2/face.hpp
+index d7237bc..5d66df2 100644
+--- a/modules/face/include/opencv2/face.hpp
++++ b/modules/face/include/opencv2/face.hpp
+@@ -256,7 +256,7 @@ public:
+     CV_WRAP virtual void update(InputArrayOfArrays src, InputArray labels);
+ 
+     /** @overload */
+-    CV_WRAP int predict(InputArray src) const;
++    CV_WRAP_AS(predict_label) int predict(InputArray src) const;
+ 
+ 
+     /** @brief Predicts a label and associated confidence (e.g. distance) for a given input image.
+-- 
+2.9.3
+
