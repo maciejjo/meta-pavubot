@@ -5,10 +5,10 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=b234ee4d69f5fce4486a80fdaf4a4263"
 
 inherit module
 
-PR="r2"
+PR="r6"
 
 SRC_URI = "git://github.com/maciejjo/pwm-servo.git"
-SRCREV = "502b09e2c11c1054a54be01b3fe6afb515208fd9"
+SRCREV = "6e5d9a8f467c197085b843fec72678c6b428ff9c"
 
 S = "${WORKDIR}/git"
 
