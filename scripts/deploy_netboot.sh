@@ -14,6 +14,10 @@ sudo cp \
 	"${TFTP_ROOT}/${DTB_DEST_FILE}" || \
 	{ echo "failed!"; exit 1; }
 
+echo "Cleaning rootfs directory..."
+sudo rm -rf "${NFS_ROOT}"/* || \
+	{ echo "failed!"; exit 1; }
+
 echo "Extracting rootfs tarball to NFS root..."
 sudo tar xf \
 	"${YOCTO_DIR}/${DEPLOY_PATH}/${ROOTFS_FILE}" \
